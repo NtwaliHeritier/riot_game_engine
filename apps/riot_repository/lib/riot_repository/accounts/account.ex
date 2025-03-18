@@ -2,9 +2,14 @@ defmodule RiotRepository.Accounts.Account do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias RiotRepository.Accounts.User
+
   schema "accounts" do
     field(:email, :string)
     field(:hash_password, :string)
+
+    has_one(:user, User)
+
     timestamps()
   end
 
@@ -12,6 +17,7 @@ defmodule RiotRepository.Accounts.Account do
     account
     |> cast(attrs, [:email, :hash_password])
     |> validate_required([:email, :hash_password])
+    |> validate_length(:email, max: 100)
     |> unique_constraint(:email)
     |> put_hash_password()
   end
